@@ -3,9 +3,10 @@ package com.example;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.text.TextUtils;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.HorizontalScrollView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -21,170 +22,118 @@ public class AllEmpDataActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_all_emp_data);
-
-        tableLayout = findViewById(R.id.tableLayout);
+        tableLayout = new TableLayout(this);
+        tableLayout.setStretchAllColumns(true);
         dbHelper = new DBHelper(this);
 
-        displayAllEmployees();
-    }
-
-    private void displayAllEmployees() {
         Cursor cursor = dbHelper.getAllEmployees();
 
-        tableLayout.removeAllViews(); // Clear previous rows
+        if (cursor.getCount() == 0) {
+            Toast.makeText(this, "No employee data found", Toast.LENGTH_SHORT).show();
+        } else {
+            // Add table header
+            TableRow header = new TableRow(this);
+            String[] headerTitles = {"ID", "Name", "Email", "Mobile", "Status", "Actions"};
+            for (String title : headerTitles) {
+                TextView textView = new TextView(this);
+                textView.setText(title);
+                textView.setPadding(16, 16, 16, 16);
+                textView.setTextColor(Color.WHITE);
+                textView.setBackgroundColor(Color.DKGRAY);
+                header.addView(textView);
+            }
+            tableLayout.addView(header);
 
-        // Header Row
-        TableRow header = new TableRow(this);
-        header.setBackgroundColor(Color.parseColor("#007BFF"));
+            if (cursor.moveToFirst()) {
+                do {
+                    TableRow row = new TableRow(this);
 
-        String[] columns = {"ID", "Name", "Address", "Mobile", "Username", "Status"};
-        for (String col : columns) {
-            TextView tv = new TextView(this);
-            tv.setText(col);
-            tv.setTextColor(Color.WHITE);
-            tv.setTextSize(16);
-            tv.setPadding(24, 16, 24, 16);
+                    // Get data from cursor
+                    String id = cursor.getString(0);
+                    String name = cursor.getString(1);
+                    String email = cursor.getString(2);
+                    String mobile = cursor.getString(3);
+                    String status = cursor.getString(4);
 
-            //column set on single line
-            tv.setSingleLine(true);
-            //set ellipsize
-          //  tv.setEllipsize(TextUtils.TruncateAt.END);
+                    // ID
+                    TextView idText = new TextView(this);
+                    idText.setText(id);
+                    idText.setPadding(8, 8, 8, 8);
+                    row.addView(idText);
 
-            tv.setLayoutParams(new TableRow.LayoutParams(
-                    ViewGroup.LayoutParams.WRAP_CONTENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT
-            ));
+                    // Name
+                    TextView nameText = new TextView(this);
+                    nameText.setText(name);
+                    nameText.setPadding(8, 8, 8, 8);
+                    row.addView(nameText);
 
-            header.addView(tv);
-        }
-        tableLayout.addView(header);
+                    // Email
+                    TextView emailText = new TextView(this);
+                    emailText.setText(email);
+                    emailText.setPadding(8, 8, 8, 8);
+                    row.addView(emailText);
 
-        if (cursor.moveToFirst())
-        {
-            int rowIndex = 0;
-            int colID = cursor.getColumnIndexOrThrow("id");
-            int colName = cursor.getColumnIndex("name");
-            int colAddress = cursor.getColumnIndex("address");
-            int colMobile = cursor.getColumnIndex("mobile");
-            int colUsername = cursor.getColumnIndex("username");
-            int colStatus = cursor.getColumnIndex("status");
+                    // Mobile
+                    TextView mobileText = new TextView(this);
+                    mobileText.setText(mobile);
+                    mobileText.setPadding(8, 8, 8, 8);
+                    row.addView(mobileText);
 
+                    // Status
+                    TextView statusText = new TextView(this);
+                    statusText.setText(status);
+                    statusText.setPadding(8, 8, 8, 8);
+                    row.addView(statusText);
 
-            do {
+                    // Buttons container
+                    TableRow buttonContainer = new TableRow(this);
 
-                //Take Values to display
-
-                        String id = cursor.getString(colID);
-                        String name = cursor.getString(colName);
-                        String address = cursor.getString(colAddress);
-                        String mobile = cursor.getString(colMobile);
-                        String username = cursor.getString(colUsername);
-                        String status = cursor.getString(colStatus);
-
-
-                TableRow row = new TableRow(this);
-                row.setBackgroundColor(rowIndex % 2 == 0 ? Color.parseColor("#F8F9FA") : Color.WHITE);
-
-                //put the values :
-                String[] values = {id,name,address, mobile, username};
-
-                for (String val : values) {
-                    TextView tv = new TextView(this);
-                    tv.setText(val != null ? val : "");
-                    tv.setTextColor(Color.parseColor("#333333"));
-                    tv.setTextSize(14);
-                    tv.setPadding(24, 16, 24, 16);
-                    tv.setSingleLine(true);
-                   // tv.setEllipsize(TextUtils.TruncateAt.END);
-
-                    row.addView(tv);
-
-                    tv.setLayoutParams(new TableRow.LayoutParams(
-                            ViewGroup.LayoutParams.WRAP_CONTENT,
-                            ViewGroup.LayoutParams.WRAP_CONTENT
-                    ));
-
-
-                }
-
-                //status Column ::
-                TableRow.LayoutParams statusParams = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 1f);
-
-                if("Pending".equalsIgnoreCase(status))
-                {
-                        //Approve Button ::
-                    Button approveBtn= new Button(this);
-                    approveBtn.setText("Approved");//set the value to approve button
-                    approveBtn.setTextSize(12);
+                    Button approveBtn = new Button(this);
+                    approveBtn.setText("Approve");
                     approveBtn.setTextColor(Color.WHITE);
-                    approveBtn.setBackgroundColor(Color.parseColor("#28a745"));
-                    approveBtn.setLayoutParams(statusParams);
-                    approveBtn.setPadding(10, 10, 10, 10);
+                    approveBtn.setBackgroundColor(Color.parseColor("#4CAF50"));
 
-
-                    //Reject Button::
-                    Button rejectBtn= new Button(this);
-                    rejectBtn.setText("Rejected");
-                    rejectBtn.setTextSize(12);
+                    Button rejectBtn = new Button(this);
+                    rejectBtn.setText("Reject");
                     rejectBtn.setTextColor(Color.WHITE);
-                    rejectBtn.setBackgroundColor(Color.parseColor("#dc3545"));
-                    rejectBtn.setLayoutParams(statusParams);
-                    rejectBtn.setPadding(10, 10, 10, 10);
+                    rejectBtn.setBackgroundColor(Color.parseColor("#F44336"));
 
-                    //add button to row::
-                    row.addView(approveBtn);
-                    row.addView(rejectBtn);
-
-                    //OnClick Action for Approve btn::
-                    approveBtn.setOnClickListener(v->{
-                        dbHelper.updateStatus(Integer.parseInt(id),"Approved");
-                        Toast.makeText(this, id + " Approved Successfully", Toast.LENGTH_SHORT).show();
-                        displayAllEmployees();//refresh after show all records ::
-                    });
-
-                    //Onlick Action for Reject Button:
-                    rejectBtn.setOnClickListener(v->{
-                        dbHelper.updateStatus(Integer.parseInt(id),"Rejected");
-                        Toast.makeText(this,id+" Rejected Successful" ,Toast.LENGTH_SHORT).show();
-                        displayAllEmployees();//refresh after show all records ::
-                    });
-
-                }else {
-                    TextView tvStatus = new TextView(this);
-                    tvStatus.setText(status);
-                    tvStatus.setTextSize(14);
-                    tvStatus.setPadding(24, 16, 24, 16);
-                    tvStatus.setSingleLine(true);
-                    tvStatus.setLayoutParams(new TableRow.LayoutParams(
-                            ViewGroup.LayoutParams.WRAP_CONTENT,
-                            ViewGroup.LayoutParams.WRAP_CONTENT
-                    ));
-
-                    if("Approved".equalsIgnoreCase(status))
-                    {
-                        tvStatus.setTextColor(Color.parseColor("#28a745"));
-                    } else if ("Rejected".equalsIgnoreCase(status)) {
-                        tvStatus.setTextColor(Color.parseColor("#dc3545"));
-                    } else {
-                        tvStatus.setTextColor(Color.parseColor("#ffc107"));
+                    // Logic for button visibility
+                    if (status.equalsIgnoreCase("Approved")) {
+                        approveBtn.setVisibility(View.GONE);
+                    } else if (status.equalsIgnoreCase("Rejected")) {
+                        rejectBtn.setVisibility(View.GONE);
                     }
-                    row.addView(tvStatus);
 
-                    // Add empty TextView to keep column alignment
-                    TextView empty = new TextView(this);
-                    empty.setText("");
-                    empty.setLayoutParams(new TableRow.LayoutParams(
-                            ViewGroup.LayoutParams.WRAP_CONTENT,
-                            ViewGroup.LayoutParams.WRAP_CONTENT
-                    ));
-                    row.addView(empty); // ensures total cells match column count
-                }
-                tableLayout.addView(row);
-                rowIndex++;
-            } while (cursor.moveToNext());
+                    approveBtn.setOnClickListener(v -> {
+                        dbHelper.updateStatus(id, "Approved");
+                        statusText.setText("Approved");
+                        approveBtn.setVisibility(View.GONE);
+                        rejectBtn.setVisibility(View.VISIBLE);
+                        Toast.makeText(this, "Approved", Toast.LENGTH_SHORT).show();
+                    });
+
+                    rejectBtn.setOnClickListener(v -> {
+                        dbHelper.updateStatus(id, "Rejected");
+                        statusText.setText("Rejected");
+                        rejectBtn.setVisibility(View.GONE);
+                        approveBtn.setVisibility(View.VISIBLE);
+                        Toast.makeText(this, "Rejected", Toast.LENGTH_SHORT).show();
+                    });
+
+                    buttonContainer.addView(approveBtn);
+                    buttonContainer.addView(rejectBtn);
+                    row.addView(buttonContainer);
+
+                    tableLayout.addView(row);
+
+                } while (cursor.moveToNext());
+            }
         }
 
-        cursor.close();
+        HorizontalScrollView scrollView = new HorizontalScrollView(this);
+        scrollView.addView(tableLayout);
+
+        setContentView(scrollView);
     }
 }

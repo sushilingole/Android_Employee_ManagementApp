@@ -118,14 +118,12 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     //Updating Employee Status :
-    public boolean updateStatus(int id, String newStatus) {
+    public void updateStatus(String empId, String status) {
         SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues cv = new ContentValues();
-        cv.put("status", newStatus);
-        int result = db.update("employees", cv, "id=?", new String[]{String.valueOf(id)});
-        return result > 0;
+        ContentValues values = new ContentValues();
+        values.put("status", status);
+        db.update("employees", values, "id = ?", new String[]{empId});
     }
-
 
     // Delete employee
     public boolean deleteEmployeeById(int id) {

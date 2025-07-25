@@ -85,8 +85,10 @@ public class LoginActivity extends AppCompatActivity
                                     intent.putExtra("username", username);
                                     startActivity(intent);
                                     finish();
-                                } else {
-                                    Toast.makeText(LoginActivity.this, "Your Account is not Approved Or Rejected", Toast.LENGTH_SHORT).show();
+                                } else if(status.equalsIgnoreCase("Rejected")) {
+                                    Toast.makeText(LoginActivity.this, "Wait, Your Rejected for A time!", Toast.LENGTH_SHORT).show();
+                                }else {
+                                    Toast.makeText(LoginActivity.this, "Wait, Your Not Approved By Admin!", Toast.LENGTH_SHORT).show();
                                 }
 
                                 //close the cursor ::
