@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#f0f2f5"
+    android:padding="16dp">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:padding="24dp"
+        card_view:cardCornerRadius="16dp"
+        card_view:cardElevation="8dp"
+        card_view:cardBackgroundColor="@color/white">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <!-- Title -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Register"
+                android:textSize="26sp"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:textColor="#2f0d3b"
+                android:layout_marginBottom="24dp" />
+
+            <!-- Full Name -->
+            <EditText
+                android:id="@+id/etName"
+                style="@style/CustomEditText"
+                android:hint="Full Name"
+                android:textColorHint="#807e7e"
+                />
+
+            <!-- Address -->
+            <EditText
+                android:id="@+id/etAddress"
+                style="@style/CustomEditText"
+                android:hint="Address"
+                android:textColorHint="#807e7e"/>
+
+            <!-- Mobile -->
+            <EditText
+                android:id="@+id/etMobile"
+                style="@style/CustomEditText"
+                android:hint="Mobile Number"
+                android:inputType="phone"
+                android:textColorHint="#807e7e"/>
+
+            <!-- Username -->
+            <EditText
+                android:id="@+id/etUsername"
+                style="@style/CustomEditText"
+                android:hint="Username"
+                android:textColorHint="#807e7e"/>
+
+            <!-- Password -->
+            <EditText
+                android:id="@+id/etPassword"
+                style="@style/CustomEditText"
+                android:hint="Password"
+                android:inputType="textPassword"
+                android:textColorHint="#807e7e"/>
+
+            <!-- Register Button -->
+            <Button
+                android:id="@+id/btnRegister"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Register"
+                android:textStyle="bold"
+                android:textColor="#FFFFFF"
+                android:backgroundTint="#3F51B5"
+                android:layout_marginTop="16dp" />
+
+            <!-- Login Redirect -->
+            <TextView
+                android:id="@+id/tvLoginLink"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Already have an account? Login"
+                android:textColor="#3F51B5"
+                android:textSize="16sp"
+                android:layout_marginTop="24dp"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+</RelativeLayout>
